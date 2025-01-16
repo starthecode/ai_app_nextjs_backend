@@ -5,7 +5,7 @@ import { AiModelFormParams } from '@/types';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-const Page: React.FC = () => {
+const Page = () => {
   const params = useSearchParams();
 
   const id = params.get('id');

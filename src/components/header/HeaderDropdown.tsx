@@ -1,21 +1,27 @@
 'use client';
-import HeaderDropdownProps from '@/types';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-export default function HeaderDropdown({
-  data,
-}: {
-  data: HeaderDropdownProps;
-}) {
-  console.log('chk data', data);
+interface dataProps {
+  user: {
+    email: string;
+    id: string;
+    image: string;
+    name: string;
+    roles: string[];
+  };
+}
 
+export default function HeaderDropdown({ data }: { data: dataProps | null }) {
   const [showDropdown, setShowDropdown] = React.useState(false);
   const router = useRouter();
 
+  const name = data?.user?.name || 'Guest';
+  const email = data?.user?.email || '';
+  const image = data?.user?.image || '';
   function handleDropdown() {
     console.log(showDropdown);
 
@@ -34,12 +40,12 @@ export default function HeaderDropdown({
       <div className="flex gap-2 items-center">
         <div className="profile relative z-10" onClick={handleDropdown}>
           <div className="user">
-            <h3>Welcome {data?.user?.name.split(' ')[0]}</h3>
+            <h3>Welcome {name.split(' ')[0]}</h3>
           </div>
           <div className="img-box bg-slate-300">
-            {!!data?.user?.image && (
+            {image && (
               <Image
-                src={data?.user?.image}
+                src={image}
                 className="p-1 rounded-full"
                 width={30}
                 height={30}
@@ -56,7 +62,7 @@ export default function HeaderDropdown({
                 Signed in as
               </p>
               <p className="text-[0.8rem] font-medium text-gray-800 dark:text-gray-300">
-                {data?.user?.email.substring(0, 20) + '...'}
+                {email.substring(0, 20) + '...'}
               </p>
             </div>
 

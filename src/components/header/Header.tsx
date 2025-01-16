@@ -2,12 +2,19 @@ import NavItems from './NavItems';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/(auth)/api/auth/[...nextauth]/options';
 import Link from 'next/link';
-import HeaderDropdownProps from '@/types';
+
+interface dataProps {
+  user: {
+    email: string;
+    id: string;
+    image: string;
+    name: string;
+    roles: string[];
+  };
+}
 
 export default async function Header() {
-  const session: HeaderDropdownProps | null = await getServerSession(
-    authOptions
-  );
+  const session: dataProps | null = await getServerSession(authOptions);
   return (
     <header className="absolute flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full text-sm py-3 md:py-0">
       <nav className=" w-full mx-auto px-4 md:px-6 lg:px-8" aria-label="Global">

@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import React from 'react';
 import RightSide from './RightSide';
-import HeaderDropdownProps from '@/types';
 
 const headerLinks = [
   {
@@ -20,11 +19,17 @@ const headerLinks = [
   },
 ];
 
-export default function NavItems({
-  data,
-}: {
-  data: HeaderDropdownProps | null;
-}) {
+interface dataProps {
+  user: {
+    email: string;
+    id: string;
+    image: string;
+    name: string;
+    roles: string[];
+  };
+}
+
+export default function NavItems({ data }: { data: dataProps | null }) {
   const [active, setActive] = React.useState<boolean>(false);
 
   return (

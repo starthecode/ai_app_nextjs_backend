@@ -1,13 +1,19 @@
 import React from 'react';
 import HeaderDropdown from './HeaderDropdown';
 import Link from 'next/link';
-import HeaderDropdownProps from '@/types';
 
-export default function RightSide({
-  data,
-}: {
-  data: HeaderDropdownProps | null;
-}) {
+interface dataProps {
+  user: {
+    email: string;
+    id: string;
+    image: string;
+    name: string;
+    roles: string[];
+  };
+}
+export default function RightSide({ data }: { data: dataProps | null }) {
+  console.log('check 2', data);
+
   return (
     <div className="pt-3 md:pt-0">
       {data ? (

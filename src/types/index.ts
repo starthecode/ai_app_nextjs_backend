@@ -36,17 +36,14 @@ export type AiModelFormParams = {
   icon: string;
 };
 
-interface User {
-  email: string;
-  id: string;
-  image: string;
-  name: string;
-  roles: string[];
-}
-
 export default interface HeaderDropdownProps {
-  user: any;
   data: {
-    user: User;
+    user: {
+      email: string;
+      id: string;
+      image: string;
+      name: string;
+      roles: string[];
+    };
   };
 }

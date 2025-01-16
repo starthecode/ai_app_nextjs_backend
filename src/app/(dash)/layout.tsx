@@ -2,6 +2,7 @@ import DashHeader from '@/components/dashboard/DashHeader';
 import PageName from '@/components/dashboard/PageName';
 import SidebarItems from '@/components/sidebar/SidebarItems';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
@@ -15,16 +16,18 @@ export default function DashLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section id="dash" className="flex bg-gray-100 min-h-screen">
-      <Toaster position="top-center" />
-      <SidebarItems />
-      <div className="flex-grow text-gray-800">
-        <DashHeader />
-        <PageName />
-        <div className="flex w-full h-screen justify-center overflow-scroll">
-          {children}
+    <Suspense>
+      <section id="dash" className="flex bg-gray-100 min-h-screen">
+        <Toaster position="top-center" />
+        <SidebarItems />
+        <div className="flex-grow text-gray-800">
+          <DashHeader />
+          <PageName />
+          <div className="flex w-full h-screen justify-center overflow-scroll">
+            {children}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </Suspense>
   );
 }
