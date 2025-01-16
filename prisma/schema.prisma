@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// Admin Users and Data
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  email String @unique
+  username String? @default("")
+  emailVerified DateTime?
+  image String?
+  roles String[] @default(["user"])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  accounts Account[]
+}
+
+
+model Account {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  provider String
+  type String
+  providerAccountId String
+  token_type String?
+  scope String?
+  expires_at Int?
+  ext_expires_in Int?
+  refresh_token String? @db.String
+  access_token String? @db.String
+  id_token String? @db.String
+  session_state String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+
+// App Users and Data
+model UserList {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userEmail String @unique
+  userName String? @default("")
+  credits   Int    @default(10)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserAiGeneratedImage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userEmail String
+  imageUrl String
+  prompt String
+  category String
+  modelUsed String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AiModel {
+id String @id @default(auto()) @map("_id") @db.ObjectId
+name String
+aiModelName String
+aiModelType String
+defaultPrompt String?
+icon String?
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+}
