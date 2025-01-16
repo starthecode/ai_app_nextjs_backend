@@ -1,5 +1,3 @@
-import { Document } from 'mongodb';
-
 // ====== USER PARAMS
 export type UserSessionParams = {
   id: string;
@@ -37,3 +35,18 @@ export type AiModelFormParams = {
   defaultPrompt: string;
   icon: string;
 };
+
+interface User {
+  email: string;
+  id: string;
+  image: string;
+  name: string;
+  roles: string[];
+}
+
+export default interface HeaderDropdownProps {
+  user: any;
+  data: {
+    user: User;
+  };
+}

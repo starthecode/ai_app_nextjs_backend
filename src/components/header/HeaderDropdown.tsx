@@ -1,11 +1,18 @@
 'use client';
+import HeaderDropdownProps from '@/types';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-export default function HeaderDropdown({ data }: any) {
+export default function HeaderDropdown({
+  data,
+}: {
+  data: HeaderDropdownProps;
+}) {
+  console.log('chk data', data);
+
   const [showDropdown, setShowDropdown] = React.useState(false);
   const router = useRouter();
 

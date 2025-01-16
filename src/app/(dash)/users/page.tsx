@@ -1,7 +1,6 @@
 'use client';
 import { getallUsers } from '@/action/user.action';
 import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
 
 type userProps = {

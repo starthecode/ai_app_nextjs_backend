@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export function middleware() {
   const response = NextResponse.next();
   response.headers.set('Access-Control-Allow-Origin', '*');
   response.headers.set(

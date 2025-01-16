@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import React from 'react';
 import RightSide from './RightSide';
+import HeaderDropdownProps from '@/types';
 
 const headerLinks = [
   {
@@ -19,7 +20,11 @@ const headerLinks = [
   },
 ];
 
-export default function NavItems({ session }: any) {
+export default function NavItems({
+  data,
+}: {
+  data: HeaderDropdownProps | null;
+}) {
   const [active, setActive] = React.useState<boolean>(false);
 
   return (
@@ -85,7 +90,7 @@ export default function NavItems({ session }: any) {
                 </Link>
               ))}
 
-            <RightSide session={session} />
+            <RightSide data={data} />
           </div>
         </div>
       </div>
