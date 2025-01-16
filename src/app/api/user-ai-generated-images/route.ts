@@ -71,6 +71,8 @@ export async function GET(request: NextRequest) {
       result = await prisma.userAiGeneratedImage.findMany();
     }
 
+    console.log(result);
+
     return NextResponse.json({ success: true, data: result });
   } catch (error) {
     console.error('Error fetching user data:', error);
