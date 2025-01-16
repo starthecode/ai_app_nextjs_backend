@@ -7,8 +7,6 @@ const API_KEY = process.env.API_KEY; // Define your API key in the .env file
 
 //insert User login details
 export async function POST(request: NextRequest) {
-  console.log('test at backend side');
-
   const body = await request.json(); // Parse the JSON body
 
   const authHeader = request.headers.get('authorization');
