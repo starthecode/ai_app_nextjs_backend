@@ -23,7 +23,7 @@ export type AiModelParams = {
     name: string;
     aiModelName: string;
     defaultPrompt: string;
-    icon: string;
+    icon: string | undefined;
   };
 };
 
@@ -33,7 +33,7 @@ export type AiModelFormParams = {
   aiModelName: string;
   aiModelType: string;
   defaultPrompt: string;
-  icon: string;
+  icon: string | undefined;
 };
 
 export default interface HeaderDropdownProps {

@@ -36,14 +36,16 @@ const AIModelForm = ({ data }: { data?: AiModelFormParams }) => {
     toast.loading('Please Wait...');
 
     try {
-      let iconUrl = data?.icon || ''; // Use existing URL by default
+      let iconUrl: string | undefined = data?.icon || ''; // Use existing URL by default
 
       // Upload a new file if one was selected
       if (formData.icon) {
         const formDataObj = new FormData();
         formDataObj.append('icon', formData.icon);
         const fileResponse = await uploadFile(formDataObj);
-        iconUrl = fileResponse; // Update with new URL
+        if (typeof fileResponse === 'string' || fileResponse === undefined) {
+          iconUrl = fileResponse; // Update with new URL
+        }
       }
 
       const payload = {
