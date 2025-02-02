@@ -23,6 +23,24 @@ export const uploadFile = async (data: FormData) => {
       signatureVersion: 'v4',
     });
 
+    const imageUrl = data.get('img') as string;
+    const type = data.get('type') as string;
+
+    if (imageUrl && type === 'delete') {
+      // 2. Extract the file key from the S3 URL
+      const fileKey = imageUrl.split('/').pop(); // Extract file name from URL
+
+      // 3. Delete the image from AWS S3
+      const delResult = await s3
+        .deleteObject({
+          Bucket: S3_BUCKET,
+          Key: fileKey!,
+        })
+        .promise();
+
+      return delResult.DeleteMarker;
+    }
+
     // Extract file data from FormData
     const fileEntry = data.get('icon') as File;
     if (!fileEntry) {
@@ -35,8 +53,6 @@ export const uploadFile = async (data: FormData) => {
     // Determine MIME type
     const getMimeType = (buffer: Buffer) => {
       const hex = buffer.toString('hex', 0, 4);
-
-      console.log('hex', hex);
 
       switch (hex) {
         case '89504e47':

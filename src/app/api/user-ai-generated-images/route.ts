@@ -1,6 +1,7 @@
 'use server';
 // app/api/ai-models/route.ts
 import prisma from '@/libs/prismaDB';
+import { uploadFile } from '@/libs/upload';
 import { NextRequest, NextResponse } from 'next/server';
 
 const API_KEY = process.env.API_KEY; // Define your API key in the .env file
@@ -52,6 +53,10 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const userEmail = searchParams.get('userEmail');
 
+  const type = searchParams.get('type');
+
+  const id = searchParams.get('id');
+
   const authHeader = request.headers.get('authorization');
 
   if (!authHeader || authHeader !== `Bearer ${API_KEY}`) {
@@ -63,15 +68,42 @@ export async function GET(request: NextRequest) {
 
   try {
     let result = '' as unknown;
-    if (userEmail) {
-      result = await prisma.userAiGeneratedImage.findMany({
-        where: { userEmail },
-      });
-    } else {
-      result = await prisma.userAiGeneratedImage.findMany();
-    }
 
-    console.log(result);
+    if (type === 'delete' && userEmail && id) {
+      const imageEntry = await prisma.userAiGeneratedImage.findUnique({
+        where: { id },
+      });
+
+      if (!imageEntry) {
+        return NextResponse.json(
+          { success: false, message: 'Image entry not found' },
+          { status: 404 }
+        );
+      }
+
+      const imageUrl = imageEntry.imageUrl;
+
+      const formDataObj = new FormData();
+      formDataObj.append('img', imageUrl);
+      formDataObj.append('type', type);
+
+      const deletedImage = await uploadFile(formDataObj);
+
+      if (deletedImage) {
+        // 4. Delete the database entry
+        await prisma.userAiGeneratedImage.delete({
+          where: { id },
+        });
+      }
+    } else {
+      if (userEmail && type == null) {
+        result = await prisma.userAiGeneratedImage.findMany({
+          where: { userEmail },
+        });
+      } else {
+        result = await prisma.userAiGeneratedImage.findMany();
+      }
+    }
 
     return NextResponse.json({ success: true, data: result });
   } catch (error) {
