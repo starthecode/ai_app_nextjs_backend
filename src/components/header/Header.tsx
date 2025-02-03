@@ -20,7 +20,7 @@ export default async function Header() {
       <nav className=" w-full mx-auto px-4 md:px-6 lg:px-8" aria-label="Global">
         <div className="flex relative w-full items-center justify-between">
           <Link
-            className="flex items-center w-[200px] gap-2 text-slate-600 text-md font-semibold outline-none no-underline "
+            className="flex items-center w-fit px-3 py-1 rounded-3xl gap-2 bg-[#8a6bf5] text-xl text-white font-bold text-md outline-none no-underline "
             href="/"
             aria-label="Brand"
           >

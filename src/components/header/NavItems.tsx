@@ -6,15 +6,19 @@ import RightSide from './RightSide';
 
 const headerLinks = [
   {
-    label: 'Link One',
+    label: 'Text to Image',
     route: '/',
   },
   {
-    label: 'Link Two',
+    label: 'Ai Avatar',
     route: '/',
   },
   {
-    label: 'Link Three',
+    label: 'Background Remover',
+    route: '/',
+  },
+  {
+    label: 'Image Upscale',
     route: '/',
   },
 ];
@@ -38,7 +42,7 @@ export default function NavItems({ data }: { data: dataProps | null }) {
         <button
           onClick={() => setActive(!active)}
           type="button"
-          className="hs-collapse-toggle flex justify-center items-center w-9 h-9 text-sm font-semibold rounded-lg border border-gray-200 text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+          className="hs-collapse-toggle flex justify-center items-center w-9 h-9 text-sm font-semibold rounded-lg border border-gray-200 text-black hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-black dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
           data-hs-collapse="#navbar-collapse-with-animation"
           aria-controls="navbar-collapse-with-animation"
           aria-label="Toggle navigation"
@@ -88,7 +92,7 @@ export default function NavItems({ data }: { data: dataProps | null }) {
               headerLinks.map((link, index) => (
                 <Link
                   key={index}
-                  className="font-medium text-gray-600 hover:text-violet-600 py-3 md:py-6 dark:text-gray-500 dark:hover:text-violet-600 focus:outline-none"
+                  className="font-medium uppercase text-xs text-gray-600 hover:text-violet-600 py-3 md:py-6 dark:text-black dark:hover:text-violet-600 focus:outline-none"
                   href={link.route}
                 >
                   {link.label}

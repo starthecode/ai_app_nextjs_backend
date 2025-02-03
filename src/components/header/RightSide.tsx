@@ -20,7 +20,7 @@ export default function RightSide({ data }: { data: dataProps | null }) {
         <HeaderDropdown data={data} />
       ) : (
         <Link
-          className="px-2 py-1 bg-blue-600 rounded-sm text-white font-medium"
+          className="px-2 py-1 bg-[#8a6bf5] rounded-sm text-white font-medium"
           href="/login"
         >
           Sign in
