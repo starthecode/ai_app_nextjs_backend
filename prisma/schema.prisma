@@ -49,13 +49,25 @@ model Account {
 
 // App Users and Data
 model UserList {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userEmail String @unique
-  userName String? @default("")
-  credits   Int    @default(10)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  email      String   @unique
+  password   String   // Hashed password
+  name       String?  @default("")
+  userName   String?
+  picture    String?  @default("/default-ai-animal-avatar.jpg")
+  credits    Int      @default(10)
+  role       UserRole @default(USER) // Role-based access control
+  isVerified Boolean  @default(false) // Email verification
+  isDeleted  Boolean  @default(false) // Soft delete support
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
 
 model UserAiGeneratedImage {
   id String @id @default(auto()) @map("_id") @db.ObjectId
