@@ -32,8 +32,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('user', user);
-
     // Generate JWT token
     const token = jwt.sign({ userId: user.id, email: user.email }, SECRET_KEY, {
       expiresIn: '7d',
@@ -48,6 +46,8 @@ export async function POST(request: NextRequest) {
         userName: user.userName,
         picture: user.picture,
         credits: user.credits,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
       },
     });
   } catch (error) {
