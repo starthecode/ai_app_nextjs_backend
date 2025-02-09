@@ -37,7 +37,7 @@ const AIModelForm = ({ data }: { data?: AiModelFormParams }) => {
 
     try {
       let iconUrl: string | undefined = data?.icon || ''; // Use existing URL by default
-      let bufferbyai;
+      const bufferbyai: Buffer | null = null; // Initialize to null
       // Upload a new file if one was selected
       if (formData.icon) {
         const formDataObj = new FormData();

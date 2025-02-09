@@ -83,13 +83,13 @@ export async function GET(request: NextRequest) {
 
       const imageUrl = imageEntry.imageUrl;
 
-      const formDataObj = new FormData();
-      formDataObj.append('img', imageUrl);
-      formDataObj.append('type', type);
+      const data = new FormData();
+      data.append('img', imageUrl);
+      data.append('type', type);
 
-      const data: never[] = [];
+      const bufferbyai: Buffer | null = null; // Initialize to null
 
-      const deletedImage = await uploadFile(data, formDataObj);
+      const deletedImage = await uploadFile(data, bufferbyai);
 
       if (deletedImage) {
         // 4. Delete the database entry

@@ -4,7 +4,7 @@ import Replicate from 'replicate';
 export async function POST(request: Request) {
   const aiData = await request.json();
 
-  let bufferbyai;
+  let bufferbyai: Buffer | null = null; // Initialize to null
 
   try {
     if (aiData?.imagePrompt || aiData?.inputPrompt) {
@@ -39,6 +39,10 @@ export async function POST(request: Request) {
       }
 
       const data: never[] = [];
+
+      if (!bufferbyai) {
+        throw new Error('bufferbyai was not assigned a value.');
+      }
 
       const aiResponse = await uploadFile(data, bufferbyai);
 

@@ -8,7 +8,7 @@ import { generateRandomHex } from './generateRandomHex';
 
 export const uploadFile = async (
   data: FormData | never[],
-  bufferbyai: unknown
+  bufferbyai: Buffer<ArrayBufferLike> | null
 ) => {
   try {
     const S3_BUCKET = 'cdk-hnb659fds-assets-305383907906-us-west-1'; // Replace with your bucket name
@@ -28,7 +28,7 @@ export const uploadFile = async (
 
     let bufferData: Buffer;
 
-    if (bufferbyai) {
+    if (Buffer.isBuffer(bufferbyai)) {
       bufferData = bufferbyai as Buffer<ArrayBufferLike>;
     } else {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
