@@ -5,7 +5,7 @@ import Replicate from 'replicate';
 export async function POST(request: Request) {
   const aiData = await request.json();
 
-  let bufferbyai: Buffer | null = null; // Initialize to null
+  let bufferbyai: Buffer | null = null;
 
   try {
     if (aiData?.imagePrompt || aiData?.inputPrompt) {
