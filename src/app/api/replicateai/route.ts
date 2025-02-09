@@ -1,21 +1,9 @@
 'use server';
 import { uploadFile } from '@/libs/upload';
-import { NextRequest, NextResponse } from 'next/server';
 import Replicate from 'replicate';
 
-const API_KEY = process.env.API_KEY; // Define your API key in the .env file
-
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   const aiData = await request.json();
-
-  const authHeader = request.headers.get('authorization');
-
-  if (!authHeader || authHeader !== `Bearer ${API_KEY}`) {
-    return NextResponse.json(
-      { success: false, message: 'Unauthorized: Invalid API Key' },
-      { status: 401 }
-    );
-  }
 
   let bufferbyai: Buffer | null = null; // Initialize to null
 
