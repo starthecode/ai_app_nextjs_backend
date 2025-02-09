@@ -6,7 +6,10 @@ import AWS from 'aws-sdk';
 import S3 from 'aws-sdk/clients/s3';
 import { generateRandomHex } from './generateRandomHex';
 
-export const uploadFile = async (data: FormData) => {
+export const uploadFile = async (
+  data: FormData | never[],
+  bufferbyai: unknown
+) => {
   try {
     const S3_BUCKET = 'cdk-hnb659fds-assets-305383907906-us-west-1'; // Replace with your bucket name
     const REGION = 'us-west-1'; // Replace with your region
@@ -23,32 +26,44 @@ export const uploadFile = async (data: FormData) => {
       signatureVersion: 'v4',
     });
 
-    const imageUrl = data.get('img') as string;
-    const type = data.get('type') as string;
+    let bufferData: Buffer;
 
-    if (imageUrl && type === 'delete') {
-      // 2. Extract the file key from the S3 URL
-      const fileKey = imageUrl.split('/').pop(); // Extract file name from URL
+    if (bufferbyai) {
+      bufferData = bufferbyai as Buffer<ArrayBufferLike>;
+    } else {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
+      const imageUrl = data.get('img') as string;
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
+      const type = data.get('type') as string;
 
-      // 3. Delete the image from AWS S3
-      const delResult = await s3
-        .deleteObject({
-          Bucket: S3_BUCKET,
-          Key: fileKey!,
-        })
-        .promise();
+      if (imageUrl && type === 'delete') {
+        // 2. Extract the file key from the S3 URL
+        const fileKey = imageUrl.split('/').pop(); // Extract file name from URL
 
-      return delResult.DeleteMarker;
+        // 3. Delete the image from AWS S3
+        const delResult = await s3
+          .deleteObject({
+            Bucket: S3_BUCKET,
+            Key: fileKey!,
+          })
+          .promise();
+
+        return delResult.DeleteMarker;
+      }
+
+      // Extract file data from FormData
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-expect-error
+      const fileEntry = data.get('icon') as File;
+      if (!fileEntry) {
+        throw new Error('No file provided in the FormData');
+      }
+
+      // Read the file as a buffer
+      bufferData = Buffer.from(await fileEntry.arrayBuffer());
     }
-
-    // Extract file data from FormData
-    const fileEntry = data.get('icon') as File;
-    if (!fileEntry) {
-      throw new Error('No file provided in the FormData');
-    }
-
-    // Read the file as a buffer
-    const bufferData = Buffer.from(await fileEntry.arrayBuffer());
 
     // Determine MIME type
     const getMimeType = (buffer: Buffer) => {

@@ -87,7 +87,9 @@ export async function GET(request: NextRequest) {
       formDataObj.append('img', imageUrl);
       formDataObj.append('type', type);
 
-      const deletedImage = await uploadFile(formDataObj);
+      const data: never[] = [];
+
+      const deletedImage = await uploadFile(data, formDataObj);
 
       if (deletedImage) {
         // 4. Delete the database entry
