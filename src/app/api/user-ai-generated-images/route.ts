@@ -57,6 +57,14 @@ export async function GET(request: NextRequest) {
 
   const id = searchParams.get('id');
 
+  const takeParam = searchParams.get('take');
+
+  const take: number | undefined = takeParam
+    ? parseInt(takeParam, 10) || undefined
+    : undefined;
+
+  const modelUsed = searchParams.get('modelUsed');
+
   const authHeader = request.headers.get('authorization');
 
   if (!authHeader || authHeader !== `Bearer ${API_KEY}`) {
@@ -103,11 +111,12 @@ export async function GET(request: NextRequest) {
           where: { userEmail },
         });
       } else {
-        result = await prisma.userAiGeneratedImage.findFirst({
-          take: 6,
-          orderBy: {
-            createdAt: 'desc',
-          },
+        result = await prisma.userAiGeneratedImage.findMany({
+          take: take && take > 0 ? take : undefined, // Apply `take` only if it's greater than 0
+          where:
+            modelUsed === 'Text To Image'
+              ? { modelUsed: modelUsed }
+              : undefined,
         });
       }
     }
