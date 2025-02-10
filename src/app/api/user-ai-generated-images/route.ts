@@ -103,7 +103,12 @@ export async function GET(request: NextRequest) {
           where: { userEmail },
         });
       } else {
-        result = await prisma.userAiGeneratedImage.findMany();
+        result = await prisma.userAiGeneratedImage.findMany({
+          take: 6,
+          orderBy: {
+            createdAt: 'desc',
+          },
+        });
       }
     }
 
