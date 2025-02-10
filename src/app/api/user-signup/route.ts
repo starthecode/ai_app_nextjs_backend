@@ -3,6 +3,9 @@
 import prisma from '@/libs/prismaDB';
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key';
 
 export async function POST(request: NextRequest) {
   const { email, password } = await request.json();
@@ -13,10 +16,12 @@ export async function POST(request: NextRequest) {
       where: { email },
     });
 
-    if (existingUser) {
+    if (existingUser?.id) {
+      console.log('existingUser', existingUser);
+
       return NextResponse.json(
-        { success: false, message: 'Email already in use' },
-        { status: 400 }
+        { success: false, message: 'Email already register' },
+        { status: 200 }
       );
     }
 
@@ -44,16 +49,40 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'User registered successfully',
-      data: newUser,
-    });
+    console.log('newUser', newUser);
+
+    if (newUser?.id) {
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: newUser.id, email: newUser.email },
+        SECRET_KEY,
+        {
+          expiresIn: '7d',
+        }
+      );
+
+      return NextResponse.json(
+        {
+          success: true,
+          token,
+          user: {
+            id: newUser.id,
+            email: newUser.email,
+            userName: newUser.userName,
+            picture: newUser.picture,
+            credits: newUser.credits,
+            createdAt: newUser.createdAt,
+            updatedAt: newUser.updatedAt,
+          },
+        },
+        { status: 200 }
+      );
+    }
   } catch (error) {
     console.error('Registration error:', error);
     return NextResponse.json(
       { success: false, message: 'Something went wrong' },
-      { status: 500 }
+      { status: 200 }
     );
   }
 }
