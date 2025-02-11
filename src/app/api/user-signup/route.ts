@@ -1,5 +1,4 @@
 'use server';
-
 import prisma from '@/libs/prismaDB';
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
@@ -8,20 +7,20 @@ import jwt from 'jsonwebtoken';
 const SECRET_KEY = process.env.JWT_SECRET || 'your_secret_key';
 
 export async function POST(request: NextRequest) {
-  const { email, password } = await request.json();
+  const { email, password, otp } = await request.json();
 
   try {
-    // Check if the email already exists
-    const existingUser = await prisma.userList.findUnique({
-      where: { email },
+    // Check if the otp match
+    const existingOtp = await prisma.otp.findFirst({
+      where: { otp },
     });
 
-    if (existingUser?.id) {
-      console.log('existingUser', existingUser);
+    if (!existingOtp) {
+      console.log('check1');
 
       return NextResponse.json(
-        { success: false, message: 'Email already register' },
-        { status: 200 }
+        { success: false, error: 'OTP verification failed' },
+        { status: 400 } // Use 400 for a bad request
       );
     }
 
@@ -48,8 +47,6 @@ export async function POST(request: NextRequest) {
         userName,
       },
     });
-
-    console.log('newUser', newUser);
 
     if (newUser?.id) {
       // Generate JWT token
@@ -79,10 +76,11 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error('Registration error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Something went wrong' },
-      { status: 200 }
-    );
+    if (error instanceof Error) {
+      return NextResponse.json(
+        { success: false, error: 'Something went wrong' },
+        { status: 400 }
+      );
+    }
   }
 }

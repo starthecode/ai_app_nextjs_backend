@@ -52,17 +52,12 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const userEmail = searchParams.get('userEmail');
-
   const type = searchParams.get('type');
-
   const id = searchParams.get('id');
-
   const takeParam = searchParams.get('take');
-
-  const take: number | undefined = takeParam
-    ? parseInt(takeParam, 10) || undefined
-    : undefined;
-
+  const skipParam = searchParams.get('skip'); // New parameter for pagination
+  const take = takeParam ? parseInt(takeParam, 10) || undefined : undefined;
+  const skip = skipParam ? parseInt(skipParam, 10) || 0 : 0; // Default to 0
   const modelUsed = searchParams.get('modelUsed');
 
   const authHeader = request.headers.get('authorization');
@@ -75,8 +70,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    let result = '' as unknown;
+    let result = [];
 
+    // ✅ DELETE Logic (Kept as it is)
     if (type === 'delete' && userEmail && id) {
       const imageEntry = await prisma.userAiGeneratedImage.findUnique({
         where: { id },
@@ -100,25 +96,33 @@ export async function GET(request: NextRequest) {
       const deletedImage = await uploadFile(data, bufferbyai);
 
       if (deletedImage) {
-        // 4. Delete the database entry
+        // Delete the database entry
         await prisma.userAiGeneratedImage.delete({
           where: { id },
         });
       }
+
+      return NextResponse.json({
+        success: true,
+        message: 'Image deleted successfully',
+      });
+    }
+
+    // ✅ FETCH Logic with Pagination
+    if (userEmail && type == null) {
+      result = await prisma.userAiGeneratedImage.findMany({
+        where: { userEmail },
+        skip, // Pagination
+        take, // Limit
+        orderBy: { createdAt: 'desc' }, // Ensure newest first
+      });
     } else {
-      if (userEmail && type == null) {
-        result = await prisma.userAiGeneratedImage.findMany({
-          where: { userEmail },
-        });
-      } else {
-        result = await prisma.userAiGeneratedImage.findMany({
-          take: take && take > 0 ? take : undefined, // Apply `take` only if it's greater than 0
-          where:
-            modelUsed === 'Text To Image'
-              ? { modelUsed: modelUsed }
-              : undefined,
-        });
-      }
+      result = await prisma.userAiGeneratedImage.findMany({
+        where: modelUsed ? { modelUsed } : undefined,
+        skip, // Pagination
+        take, // Limit
+        orderBy: { createdAt: 'desc' }, // Ensure newest first
+      });
     }
 
     return NextResponse.json({ success: true, data: result });
