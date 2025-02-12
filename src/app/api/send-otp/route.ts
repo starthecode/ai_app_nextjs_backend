@@ -5,7 +5,7 @@ import nodemailer from 'nodemailer';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    const { email, category } = await request.json();
 
     if (!email) {
       return NextResponse.json({ error: 'Email is required' }, { status: 400 });
@@ -16,11 +16,20 @@ export async function POST(request: NextRequest) {
       where: { email },
     });
 
-    if (existingUser?.id) {
-      return NextResponse.json(
-        { success: false, error: 'Email already register' },
-        { status: 400 }
-      );
+    if (category == 'passwordreset') {
+      if (!existingUser?.id) {
+        return NextResponse.json(
+          { success: false, error: 'Email Not Found' },
+          { status: 400 }
+        );
+      }
+    } else {
+      if (existingUser?.id) {
+        return NextResponse.json(
+          { success: false, error: 'Email already register' },
+          { status: 400 }
+        );
+      }
     }
 
     const oneMinuteAgo = new Date(Date.now() - 1 * 60 * 1000);
@@ -49,8 +58,14 @@ export async function POST(request: NextRequest) {
     const mailOptions = {
       from: process.env.NODEMAILER_EMAIL,
       to: email,
-      subject: 'Your OTP Code',
-      html: `Your OTP code is: ${otp}. It is valid for 5 minutes.`,
+      subject:
+        category === 'passwordreset'
+          ? 'Password Reset - Your OTP Code'
+          : 'Your OTP Code',
+      html:
+        category === 'passwordreset'
+          ? `Your Password Reset OTP code is: ${otp}. It is valid for 1 minute.`
+          : `Your OTP code is: ${otp}. It is valid for 1 minute.`,
     };
 
     // Send email
@@ -61,26 +76,18 @@ export async function POST(request: NextRequest) {
       data: {
         email,
         otp,
+        category,
       },
     });
 
     // Send response first
     const response = NextResponse.json({
       success: true,
-      message: 'OTP sent successfully',
-      otp, // Remove in production
+      message:
+        category === 'passwordreset'
+          ? 'Password Reset - OTP Sent on Email'
+          : 'OTP Sent on Email',
     });
-
-    // Delete OTP in the background/ code not working on server
-    // setImmediate(async () => {
-    //   try {
-    //     await new Promise((resolve) => setTimeout(resolve, 1 * 60 * 1000)); // Wait 1 min
-    //     await prisma.otp.deleteMany({ where: { email } });
-    //     console.log(`OTP deleted for ${email}`);
-    //   } catch (error) {
-    //     console.error('Failed to delete OTP:', error);
-    //   }
-    // });
 
     return response;
   } catch (error) {

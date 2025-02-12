@@ -96,5 +96,6 @@ model Otp {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   email     String
   otp       String
+  category  String
   createdAt DateTime @default(now())
 }
