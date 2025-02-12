@@ -54,18 +54,25 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Automatically delete OTP after 3 minutes
-    setTimeout(async () => {
-      await prisma.otp.deleteMany({
-        where: { email },
-      });
-    }, 1 * 60 * 1000); // 1 minutes
-
-    return NextResponse.json({
+    // Send response first
+    const response = NextResponse.json({
       success: true,
       message: 'OTP sent successfully',
-      otp,
-    }); // Remove `otp` from response in production
+      otp, // Remove in production
+    });
+
+    // Delete OTP in the background
+    setImmediate(async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 1 * 60 * 1000)); // Wait 1 min
+        await prisma.otp.deleteMany({ where: { email } });
+        console.log(`OTP deleted for ${email}`);
+      } catch (error) {
+        console.error('Failed to delete OTP:', error);
+      }
+    });
+
+    return response;
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(
