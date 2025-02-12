@@ -23,6 +23,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const oneMinuteAgo = new Date(Date.now() - 1 * 60 * 1000);
+
+    //Delete old or expired OTPs for this email
+    await prisma.otp.deleteMany({
+      where: {
+        email,
+        OR: [{ createdAt: { lt: oneMinuteAgo } }, { email }], // Delete expired and existing OTPs
+      },
+    });
+
     // Generate a 4-digit OTP
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -61,16 +71,16 @@ export async function POST(request: NextRequest) {
       otp, // Remove in production
     });
 
-    // Delete OTP in the background
-    setImmediate(async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1 * 60 * 1000)); // Wait 1 min
-        await prisma.otp.deleteMany({ where: { email } });
-        console.log(`OTP deleted for ${email}`);
-      } catch (error) {
-        console.error('Failed to delete OTP:', error);
-      }
-    });
+    // Delete OTP in the background/ code not working on server
+    // setImmediate(async () => {
+    //   try {
+    //     await new Promise((resolve) => setTimeout(resolve, 1 * 60 * 1000)); // Wait 1 min
+    //     await prisma.otp.deleteMany({ where: { email } });
+    //     console.log(`OTP deleted for ${email}`);
+    //   } catch (error) {
+    //     console.error('Failed to delete OTP:', error);
+    //   }
+    // });
 
     return response;
   } catch (error) {
