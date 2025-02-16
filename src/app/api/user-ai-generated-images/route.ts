@@ -36,6 +36,7 @@ export async function POST(request: NextRequest) {
         prompt: data?.prompt,
         category: 'new',
         modelUsed: data?.modelUsed,
+        aiModelName: data?.aiModelName,
       },
     });
     return NextResponse.json({ success: true, data: result });
@@ -121,7 +122,7 @@ export async function GET(request: NextRequest) {
         where: modelUsed ? { modelUsed } : undefined,
         skip, // Pagination
         take, // Limit
-        orderBy: { createdAt: 'desc' }, // Ensure newest first
+        orderBy: { createdAt: 'desc' },
       });
     }
 

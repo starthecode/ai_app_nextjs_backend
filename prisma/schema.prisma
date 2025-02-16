@@ -73,6 +73,7 @@ model UserAiGeneratedImage {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   userEmail String
   imageUrl String
+  aiModelName String?
   prompt String
   category String
   modelUsed String
