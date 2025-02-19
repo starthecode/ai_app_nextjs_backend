@@ -5,8 +5,8 @@ import React from 'react';
 
 type userProps = {
   id: string;
-  name: string;
-  image: string;
+  email: string;
+  picture: string;
 };
 
 const Users = () => {
@@ -18,7 +18,6 @@ const Users = () => {
     const fetchData = async () => {
       try {
         const res = await getallUsers();
-        console.log('res', res);
 
         setUserData(res);
       } catch (err) {
@@ -43,6 +42,9 @@ const Users = () => {
   if (userData.length === 0) {
     return <div>No data available.</div>;
   }
+
+  console.log('userData', userData);
+
   return (
     <div>
       {error ? (
@@ -54,7 +56,7 @@ const Users = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
-                    {['ID', 'Name', 'User Photo'].map((header) => (
+                    {['ID', 'Email', 'User Photo'].map((header) => (
                       <th
                         key={header}
                         scope="col"
@@ -78,14 +80,17 @@ const Users = () => {
                         </td>
 
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                          {item.name}
+                          {item.email}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 flex justify-center">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 flex justify-start">
                           <Image
                             width={80}
                             height={80}
-                            src={item.image}
-                            alt={`${item.image} icon`}
+                            src={
+                              `https://cdk-hnb659fds-assets-305383907906-us-west-1.s3.us-west-1.amazonaws.com` +
+                              item.picture
+                            }
+                            alt={`${item.picture} icon`}
                             className="w-6 h-6"
                           />
                         </td>

@@ -2,7 +2,7 @@ import React from 'react';
 
 const SidebarItems = () => {
   return (
-    <aside className="hidden sm:flex sm:flex-col w-[200px]">
+    <aside className="hidden sm:flex sm:flex-col w-[250px]">
       <a
         href="#"
         className="flex text-2xl font-bold text-white w-full items-center justify-center h-20 bg-purple-600 hover:bg-purple-500 focus:bg-purple-500"

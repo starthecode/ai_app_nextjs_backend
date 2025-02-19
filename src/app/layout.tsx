@@ -27,7 +27,7 @@ export default function RootLayout({
     <AuthProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`overflow-hidden  ${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <main className="fllex items-center h-screen w-full">{children}</main>
         </body>

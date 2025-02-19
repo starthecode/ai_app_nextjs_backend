@@ -4,7 +4,7 @@ import prisma from '@/libs/prismaDB';
 
 export const getallUsers = async () => {
   try {
-    const result = await prisma.user.findMany();
+    const result = await prisma.userList.findMany();
 
     return JSON.parse(JSON.stringify(result));
   } catch (error) {

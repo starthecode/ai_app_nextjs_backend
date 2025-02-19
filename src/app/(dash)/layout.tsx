@@ -17,15 +17,13 @@ export default function DashLayout({
 }>) {
   return (
     <Suspense>
-      <section id="dash" className="flex bg-gray-100 min-h-screen">
+      <section id="dash" className="flex min-h-screen">
         <Toaster position="top-center" />
         <SidebarItems />
-        <div className="flex-grow text-gray-800">
+        <div className="text-gray-800 w-full overflow-hidden">
           <DashHeader />
           <PageName />
-          <div className="flex w-full h-screen justify-center overflow-scroll">
-            {children}
-          </div>
+          <div>{children}</div>
         </div>
       </section>
     </Suspense>
