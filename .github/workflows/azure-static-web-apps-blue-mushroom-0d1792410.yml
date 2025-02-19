@@ -16,6 +16,10 @@ jobs:
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v3
+      env:
+        NODE_VERSION: '18'
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+        NEXT_PUBLIC_SERVER_URL: ${{ secrets.NEXT_PUBLIC_SERVER_URL}}
         with:
           submodules: true
           lfs: false
