@@ -15,10 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
       - uses: actions/checkout@v3
         with:
           submodules: true
           lfs: false
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
