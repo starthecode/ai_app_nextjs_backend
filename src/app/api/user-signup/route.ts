@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
     }
 
     if (category === 'passwordreset') {
-
       try {
         // Hash the new password
         const newHashedPassword = await bcrypt.hash(password, 10);
@@ -75,7 +74,6 @@ export async function POST(request: NextRequest) {
     }
 
     const emailUsername = email.split('@')[0];
-
     // Generate a 4-digit unique number
     const uniqueNumber = generateUniqueNumber();
 
@@ -88,7 +86,7 @@ export async function POST(request: NextRequest) {
     // Create the user
     const newUser = await prisma.userList.create({
       data: {
-        email,
+        email: email.toLowerCase(),
         password: hashedPassword,
         userName,
       },
