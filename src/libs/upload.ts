@@ -11,7 +11,7 @@ export const uploadFile = async (
   bufferbyai: Buffer<ArrayBufferLike> | null
 ) => {
   try {
-    const S3_BUCKET = 'cdk-hnb659fds-assets-305383907906-us-west-1'; // Replace with your bucket name
+    const S3_BUCKET = process.env.AMZ_BUCKET_ID; // Replace with your bucket name
     const REGION = 'us-west-1'; // Replace with your region
 
     // Securely fetch credentials using environment variables
