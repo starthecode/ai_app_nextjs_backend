@@ -43,8 +43,6 @@ const Users = () => {
     return <div>No data available.</div>;
   }
 
-  console.log('userData', userData);
-
   return (
     <div>
       {error ? (

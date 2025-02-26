@@ -12,8 +12,6 @@ interface dataProps {
   };
 }
 export default function RightSide({ data }: { data: dataProps | null }) {
-  console.log('check 2', data);
-
   return (
     <div className="pt-3 md:pt-0">
       {data ? (

@@ -5,8 +5,6 @@ import Replicate from 'replicate';
 export async function POST(request: Request) {
   const aiData = await request.json();
 
-  console.log('aiData', aiData);
-
   let bufferbyai: Buffer | null = null;
 
   try {

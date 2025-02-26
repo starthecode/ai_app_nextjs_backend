@@ -21,8 +21,6 @@ const Page = () => {
       try {
         const res = await getsingleAiModel(id); // Pass the `id` to fetch data
 
-        console.log('res', res);
-
         setData(res);
       } catch (err) {
         setError('Failed to fetch AI model details.');
